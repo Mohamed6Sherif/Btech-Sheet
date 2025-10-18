@@ -19,6 +19,8 @@ const CoursesPage: React.FC = () => {
     { id: "computer", name: "تأسيس الكمبيوتر" },
     { id: "english", name: "تأسيس الإنجليزي" },
     { id: "programming", name: "تأسيس البرمجة" },
+    { id: "eng_basics", name: "تأسيس الإنجليزي أطفال" },
+    { id: "eng_school", name: "منهج الإنجليزي" },
   ];
 
   useEffect(() => {

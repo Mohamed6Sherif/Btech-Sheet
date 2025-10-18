@@ -6,7 +6,6 @@ interface Student {
   id: number;
   name: string;
   course: string;
-  attendance: boolean[];
   paid: boolean;
   fee: number;
   rating: number;
@@ -21,6 +20,8 @@ const CoursePage: React.FC = () => {
     computer: "تأسيس الكمبيوتر",
     english: "تأسيس الإنجليزي",
     programming: "تأسيس البرمجة",
+    eng_basics: "تأسيس الإنجليزي أطفال",
+    eng_school: "منهج الإنجليزي",
   };
 
   useEffect(() => {
@@ -69,7 +70,6 @@ const CoursePage: React.FC = () => {
                 <thead className="table-light">
                   <tr>
                     <th>الاسم</th>
-                    <th>الحضور (8 حصص)</th>
                     <th>الدفع</th>
                     <th>التقييم الشهري</th>
                     <th>إجراءات</th>
@@ -79,31 +79,6 @@ const CoursePage: React.FC = () => {
                   {filtered.map((student) => (
                     <tr key={student.id}>
                       <td className="fw-semibold">{student.name}</td>
-
-                      <td>
-                        <div className="d-flex justify-content-center gap-1">
-                          {student.attendance.map((att, index) => (
-                            <input
-                              title="attend"
-                              key={index}
-                              type="checkbox"
-                              className="form-check-input mx-1"
-                              checked={att}
-                              onChange={() => {
-                                const updatedAttendance = [
-                                  ...student.attendance,
-                                ];
-                                updatedAttendance[index] =
-                                  !updatedAttendance[index];
-                                updateStudent({
-                                  ...student,
-                                  attendance: updatedAttendance,
-                                });
-                              }}
-                            />
-                          ))}
-                        </div>
-                      </td>
 
                       <td>
                         <input

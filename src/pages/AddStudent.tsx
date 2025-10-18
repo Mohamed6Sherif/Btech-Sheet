@@ -5,7 +5,6 @@ interface Student {
   id: number;
   name: string;
   course: string;
-  attendance: boolean[];
   paid: boolean;
   fee: number;
   rating: number;
@@ -27,6 +26,21 @@ const AddStudent: React.FC = () => {
     }
   }, []);
 
+  // ✅ عند تغيير الكورس نحدّث الرسوم تلقائيًا
+  useEffect(() => {
+    if (course === "programming") {
+      setFee(300);
+    } else if (course === "computer") {
+      setFee(150);
+    } else if (course === "english") {
+      setFee(150);
+    } else if (course === "eng_basics") {
+      setFee(50);
+    } else if (course === "eng_school") {
+      setFee(50);
+    }
+  }, [course]);
+
   // حفظ الطلاب عند الإضافة
   const saveToLocalStorage = (data: Student[]) => {
     localStorage.setItem("students", JSON.stringify(data));
@@ -45,7 +59,6 @@ const AddStudent: React.FC = () => {
       id: Date.now(),
       name,
       course,
-      attendance: Array(8).fill(false), // 8 حصص افتراضيًا
       paid: false,
       fee,
       rating: 0,
@@ -57,7 +70,6 @@ const AddStudent: React.FC = () => {
 
     alert("✅ تم إضافة الطالب بنجاح!");
     setName("");
-    setFee(0);
 
     // تحويل المستخدم لصفحة الكورس
     navigate(`/course/${course}`);
@@ -65,7 +77,7 @@ const AddStudent: React.FC = () => {
 
   return (
     <div className="bg-white shadow-md rounded-xl p-5 max-w-lg mx-auto mt-5">
-      <h2 className="text-2xl font-bold text-center text-blue-600 mb-4">
+      <h2 className="text-2xl font-bold text-center text-primary mb-4">
         إضافة طالب جديد
       </h2>
 
@@ -94,6 +106,8 @@ const AddStudent: React.FC = () => {
             <option value="computer">تأسيس الكمبيوتر</option>
             <option value="english">تأسيس الإنجليزي</option>
             <option value="programming">تأسيس البرمجة</option>
+            <option value="eng_basics">تأسيس إنجليزي أطفال</option>
+            <option value="eng_school">منهج إنجليزي</option>
           </select>
         </div>
 
@@ -112,12 +126,14 @@ const AddStudent: React.FC = () => {
         </div>
 
         {/* زر الإضافة */}
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-black py-2 rounded hover:bg-blue-700 transition"
-        >
-          حفظ الطالب
-        </button>
+        <div className="flex justify-center mt-4">
+          <button
+            type="submit"
+            className="bg-primary text-white px-5 py-2 rounded hover:bg-blue-700 transition"
+          >
+            حفظ الطالب
+          </button>
+        </div>
       </form>
     </div>
   );

@@ -18,21 +18,36 @@ const Dashboard: React.FC = () => {
     if (saved) setStudents(JSON.parse(saved));
   }, []);
 
-  // حساب البيانات
+  // أسعار الكورسات
+  const FEES: Record<string, number> = {
+    computer: 150,
+    english: 150,
+    programming: 300, // 💥 كورس البرمجة
+    eng_basics: 50,
+    eng_school: 50,
+  };
+
+  // حساب البيانات العامة
   const totalStudents = students.length;
   const totalPaid = students.filter((s) => s.paid).length;
   const totalUnpaid = students.filter((s) => !s.paid).length;
 
-  // سعر الاشتراك الشهري
-  const MONTHLY_FEE = 150;
+  const totalIncome = students.reduce((sum, s) => {
+    const fee = FEES[s.course] || 150;
+    return s.paid ? sum + fee : sum;
+  }, 0);
 
-  const totalIncome = totalPaid * MONTHLY_FEE;
-  const expectedIncome = totalStudents * MONTHLY_FEE;
+  const expectedIncome = students.reduce((sum, s) => {
+    const fee = FEES[s.course] || 150;
+    return sum + fee;
+  }, 0);
 
   const courses = [
     { id: "computer", name: "تأسيس كمبيوتر" },
     { id: "english", name: "تأسيس إنجليزي" },
     { id: "programming", name: "تأسيس برمجة" },
+    { id: "eng_basics", name: "تأسيس إنجليزي أطفال" },
+    { id: "eng_school", name: "منهج إنجليزي" },
   ];
 
   return (
@@ -72,9 +87,7 @@ const Dashboard: React.FC = () => {
           <div className="card shadow-sm border-0">
             <div className="card-body">
               <h6 className="text-secondary mb-2">المبلغ المستلم</h6>
-              <h3 className="text-purple fw-bold text-success">
-                {totalIncome} جنيه
-              </h3>
+              <h3 className="text-success fw-bold">{totalIncome} جنيه</h3>
             </div>
           </div>
         </div>
@@ -99,10 +112,12 @@ const Dashboard: React.FC = () => {
               <thead className="table-primary">
                 <tr>
                   <th>الكورس</th>
+                  <th>سعر الاشتراك</th>
                   <th>عدد الطلاب</th>
                   <th>دافعين</th>
                   <th>لسه مدفعوش</th>
                   <th>الإيراد</th>
+                  <th>إجمالي</th>
                 </tr>
               </thead>
               <tbody>
@@ -111,16 +126,21 @@ const Dashboard: React.FC = () => {
                     (s) => s.course === c.id
                   );
                   const paid = courseStudents.filter((s) => s.paid).length;
-                  const unpaid = courseStudents.filter((s) => !s.paid).length;
-                  const income = paid * MONTHLY_FEE;
+                  const unpaid = courseStudents.length - paid;
+
+                  const fee = FEES[c.id] || 150;
+                  const income = paid * fee;
+                  const total = courseStudents.length * fee;
 
                   return (
                     <tr key={c.id}>
                       <td>{c.name}</td>
+                      <td>{fee} جنيه</td>
                       <td>{courseStudents.length}</td>
                       <td className="text-success fw-semibold">{paid}</td>
                       <td className="text-danger fw-semibold">{unpaid}</td>
                       <td className="fw-bold">{income} جنيه</td>
+                      <td className="fw-bold">{total} جنيه</td>
                     </tr>
                   );
                 })}
